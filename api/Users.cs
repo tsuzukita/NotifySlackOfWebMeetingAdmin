@@ -1,35 +1,83 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
+using NotifySlackOfWebMeetingAdmin.Apis.Entities;
+using NotifySlackOfWebMeetingAdmin.Apis.Queries;
+using Microsoft.Azure.Documents.Linq;
+using System.Linq;
 
 namespace NotifySlackOfWebMeetingAdmin.Apis
 {
     public static class Users
     {
-        [FunctionName("Users")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+        [FunctionName("GetUsers")]
+        public static async Task<IActionResult> GetUsers(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Users")] HttpRequest req,
+            [CosmosDB(
+                databaseName: "notify-slack-of-web-meeting-db",
+                collectionName: "Users",
+                ConnectionStringSetting = "CosmosDbConnectionString")
+            ]DocumentClient client,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+            string message = string.Empty;
 
-            string name = req.Query["name"];
+            try
+            {
+                log.LogInformation("GET Users");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+                // クエリパラメータから検索条件パラメータを設定
+                UsersQueryParameter queryParameter = new UsersQueryParameter()
+                {
+                    Ids = req.Query["ids"],
+                    Name = req.Query["name"],
+                    EmailAddress = req.Query["emailAddress"],
+                    UserPrincipal = req.Query["userPrincipal"]
+                };
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                // ユーザー情報を取得
+                message = JsonConvert.SerializeObject(await GetUsers(client, queryParameter, log));
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex);
+            }
 
-            return new OkObjectResult(responseMessage);
+            return new OkObjectResult(message);
+        }
+
+        /// <summary>
+        /// ユーザー情報一覧を取得する。
+        /// </summary>
+        internal static async Task<IEnumerable<User>> GetUsers(
+                   DocumentClient client,
+                   UsersQueryParameter queryParameter,
+                   ILogger log
+                   )
+        {
+            // Get a JSON document from the container.
+            Uri collectionUri = UriFactory.CreateDocumentCollectionUri("notify-slack-of-web-meeting-db", "Users");
+            IDocumentQuery<User> query = client.CreateDocumentQuery<User>(collectionUri, new FeedOptions { EnableCrossPartitionQuery = true, PopulateQueryMetrics = true })
+                .Where(queryParameter.GetWhereExpression())
+                .AsDocumentQuery();
+
+            var documentItems = new List<User>();
+            while (query.HasMoreResults)
+            {
+                foreach (var documentItem in await query.ExecuteNextAsync<User>())
+                {
+                    documentItems.Add(documentItem);
+                }
+            }
+            return documentItems;
         }
     }
 }
