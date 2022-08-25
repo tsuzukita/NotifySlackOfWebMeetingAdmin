@@ -1,8 +1,17 @@
-import React from 'react';
+import React from "react";
+import SideNavigation from "./SideNavigation";
+import UserList from "./UserList";
 
 function App() {
-  const value = 'World';
-  return <div>Hello {value}</div>;
+  return (
+    <div className="app">
+      <SideNavigation />
+
+      <div className="main-content">
+        <UserList />
+      </div>
+    </div>
+  );
 }
 
 export default App;
