@@ -58,12 +58,15 @@
     margin-left: 16px;
     height: 0;
     flex-grow: 1;
-    display: grid;
-    grid-template-columns: 30% 1fr;
     border-left: 1px solid #6c757d;
     overflow: auto;
   }
   
+.user-list-grid-item-container{
+    display: grid;
+    grid-template-columns: 30% 1fr;
+}
+
   .user-list-grid-loading {
     position: absolute;
     top: 0;
