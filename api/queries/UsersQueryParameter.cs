@@ -35,11 +35,6 @@ namespace NotifySlackOfWebMeetingAdmin.Apis.Queries
         public string EmailAddress { get; set; }
 
         /// <summary>
-        /// ユーザープリンシパル名
-        /// </summary>
-        public string UserPrincipal { get; set; }
-
-        /// <summary>
         /// ID一覧が指定されているか
         /// </summary>
         public bool HasIds
@@ -62,15 +57,6 @@ namespace NotifySlackOfWebMeetingAdmin.Apis.Queries
         public bool HasEmailAddress {
             get {
                 return !string.IsNullOrEmpty(EmailAddress);
-            }
-        }
-
-        /// <summary>
-        /// ユーザープリンシパル名が指定されているか
-        /// </summary>
-        public bool HasUserPrincipal {
-            get {
-                return !string.IsNullOrEmpty(UserPrincipal);
             }
         }
 
@@ -98,10 +84,6 @@ namespace NotifySlackOfWebMeetingAdmin.Apis.Queries
             if (this.HasEmailAddress)
             {
                 expr = expr.And(s => s.EmailAddress.Contains(this.EmailAddress));
-            }
-            if (this.HasUserPrincipal)
-            {
-                expr = expr.And(s => s.UserPrincipal == this.UserPrincipal);
             }
             if (expr == original)
             {
