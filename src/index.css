@@ -20,6 +20,10 @@
   
     border-right: 2px solid gray;
   }
+
+  .side-navigation-link-container {
+    margin-top: 16px;
+  }
   
   .main-content {
     height: 100%;
@@ -111,4 +115,13 @@
   .user-list-grid-item:nth-child(4n-1),
   .user-list-grid-item:nth-child(4n) {
     background-color: #ecedee;
+  }
+
+  .add-user {
+    padding: 16px;
+  }
+  
+  .add-user-error {
+    margin-top: 8px;
+    color: red;
   }

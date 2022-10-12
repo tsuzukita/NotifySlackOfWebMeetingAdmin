@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const redirect = window.location.pathname;
 const baseUrl = '/.auth'; 
@@ -12,7 +13,16 @@ function SideNavigation({isAuthorized}) {
         <a href={logoutUrl}><button>ログアウト</button></a>:
         <a href={loginUrl}><button>ログイン</button></a>
       }
-      <h5>ユーザー 一覧 </h5>
+      <nav className="side-navigation-link-container">
+        <ul>
+          <li>
+            <Link to="/">ユーザー一覧</Link>
+          </li>
+          <li>
+            <Link to="/add">ユーザー追加</Link>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }
