@@ -23,7 +23,10 @@ namespace NotifySlackOfWebMeetingAdmin.Apis
         /// <summary>
         /// ユーザーを登録する。
         /// </summary>
-        /// <returns>登録したユーザー情報</returns>
+        /// <param name="req">HTTPリクエスト。</param>
+        /// <param name="documentsOut">CosmosDBのドキュメント。</param>
+        /// <param name="log">ロガー。</param>
+        /// <returns>登録したユーザー情報。</returns>
         [FunctionName("AddUsers")]
         public static async Task<IActionResult> AddUsers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "Users")] HttpRequest req,
@@ -38,7 +41,6 @@ namespace NotifySlackOfWebMeetingAdmin.Apis
 
             try
             {
-
                 log.LogInformation("POST Users");
 
                 // リクエストのBODYからパラメータ取得
@@ -67,6 +69,13 @@ namespace NotifySlackOfWebMeetingAdmin.Apis
             return new OkObjectResult(message);
         }
 
+        /// <summary>
+        /// ユーザー情報を取得する。
+        /// </summary>
+        /// <param name="req">HTTPリクエスト。</param>
+        /// <param name="client">CosmosDBのドキュメントクライアント。</param>
+        /// <param name="log">ロガー。</param>
+        /// <returns>ユーザー情報。</returns>
         [FunctionName("GetUsers")]
         public static async Task<IActionResult> GetUsers(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "Users")] HttpRequest req,
@@ -106,9 +115,9 @@ namespace NotifySlackOfWebMeetingAdmin.Apis
         /// <summary>
         /// ユーザーを追加する
         /// </summary>
-        /// <param name="documentsOut">CosmosDBのドキュメント</param>
-        /// <param name="user">ユーザー情報</param>
-        /// <returns></returns>
+        /// <param name="documentsOut">CosmosDBのドキュメント。</param>
+        /// <param name="user">ユーザー情報。</param>
+        /// <returns>追加したユーザー情報(文字列)。</returns>
         internal static async Task<string> AddUser(
             IAsyncCollector<dynamic> documentsOut,
             User user)
@@ -121,6 +130,10 @@ namespace NotifySlackOfWebMeetingAdmin.Apis
         /// <summary>
         /// ユーザー情報一覧を取得する。
         /// </summary>
+        /// <param name="client">CosmosDBのドキュメントクライアント。</param>
+        /// <param name="queryParameter">クエリパラメータ。</param>
+        /// <param name="log">ロガー。</param>
+        /// <returns>ユーザー情報一覧。</returns>
         internal static async Task<IEnumerable<User>> GetUsers(
                    DocumentClient client,
                    UsersQueryParameter queryParameter,
