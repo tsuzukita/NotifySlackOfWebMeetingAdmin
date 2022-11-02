@@ -38,19 +38,31 @@
   
   .user-list-header {
     padding: 20px;
+  }
+
+  .user-list-filter {
     display: flex;
   }
   
-  .user-list-header-button {
+  .user-list-filter-button {
     margin-left: 16px;
     flex-shrink: 0;
+  }
+
+  .user-delete-button-wrapper {
+    padding: 0 20px;
+    display: flex;
+  }
+  
+  .user-delete-button {
+    margin-left: auto;
   }
   
   .user-list-grid-header {
     margin-top: 20px;
     margin-left: 16px;
     display: grid;
-    grid-template-columns: 30% 1fr;
+    grid-template-columns: 32px 30% 1fr;
     border-left: 1px solid #6c757d;
     border-radius: 0.25rem 0.25rem 0 0;
     background-color: #6c757d;
@@ -68,7 +80,7 @@
   
 .user-list-grid-item-container{
     display: grid;
-    grid-template-columns: 30% 1fr;
+    grid-template-columns: 32px 30% 1fr;
 }
 
   .user-list-grid-loading {
@@ -112,8 +124,9 @@
     border-bottom: 1px solid #6c757d;
   }
   
-  .user-list-grid-item:nth-child(4n-1),
-  .user-list-grid-item:nth-child(4n) {
+  .user-list-grid-item:nth-child(6n),
+  .user-list-grid-item:nth-child(6n-1),
+  .user-list-grid-item:nth-child(6n-2) {
     background-color: #ecedee;
   }
 
