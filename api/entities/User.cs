@@ -14,6 +14,7 @@ namespace NotifySlackOfWebMeetingAdmin.Apis.Entities
         public User()
         {
             Id = Guid.NewGuid().ToString();
+            AuthorizationKey = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -33,5 +34,11 @@ namespace NotifySlackOfWebMeetingAdmin.Apis.Entities
         /// </summary>
         [JsonProperty("emailAddress")]
         public string EmailAddress { get; set; }
+
+        /// <summary>
+        /// 認可用トークン
+        /// </summary>
+        [JsonProperty("authorizationKey")]
+        public string AuthorizationKey { get; set; }
     }
 }

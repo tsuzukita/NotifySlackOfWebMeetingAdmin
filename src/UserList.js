@@ -103,6 +103,7 @@ function UserList() {
                 </div>
                 <div className="user-list-grid-item">ユーザー名</div>
                 <div className="user-list-grid-item">メールアドレス</div>
+                <div className="user-list-grid-item">認可トークン</div>
             </div>
             <div className="user-list-grid">
                 {isLoading && (
@@ -126,6 +127,7 @@ function UserList() {
                             </div>
                             <div className="user-list-grid-item">{user.name}</div>
                             <div className="user-list-grid-item">{user.emailAddress}</div>
+                            <div className="user-list-grid-item">{user.authorizationKey}</div>
                         </React.Fragment>
                     ))}
                 </div>
